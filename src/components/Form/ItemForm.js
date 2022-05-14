@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { useState } from "react";
 
 import Container from "react-bootstrap/Container";
@@ -14,6 +14,7 @@ const ItemForm = (props) => {
   const [userModel, setUserModel] = useState("");
   const [userQuantity, setUserQuantity] = useState(1);
   const [userCategory, setUserCategory] = useState("");
+  const [userImage, setUserImage] = useState({ image: null });
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -25,6 +26,7 @@ const ItemForm = (props) => {
         partModel: userModel,
         partQuantity: userQuantity,
         partCategoryId: userCategory,
+        partImage: userImage,
       }),
     };
     fetch(`${baseURL}${props.urlTarget}`, requestOptions)
@@ -52,9 +54,34 @@ const ItemForm = (props) => {
     setUserQuantity(e.target.value);
   };
 
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      let img = event.target.files[0];
+      setUserImage({
+        image: URL.createObjectURL(img),
+      });
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          partManufacturer: userManufacturer,
+          partModel: userModel,
+          partQuantity: userQuantity,
+          partCategoryId: userCategory,
+          partImage: userImage,
+        }),
+      };
+      fetch(`${baseURL}${props.urlTarget}`, requestOptions)
+        .then((response) => response.json())
+        .then(props.refreshDataHandler)
+        .then(props.showAddPartForm);
+    }
+  };
+
   return (
     <Container fluid="md">
       <Form
+      encType="multipart/form-data"
         onSubmit={handleSubmit}
         className="bg-light p-4 m-2 rounded shadow-sm border"
       >
@@ -102,7 +129,7 @@ const ItemForm = (props) => {
             as={Col}
             sm={12}
             md={12}
-            lg={6}
+            lg={4}
             className="mb-2"
             controlId="formQuantity"
           >
@@ -118,7 +145,7 @@ const ItemForm = (props) => {
             as={Col}
             sm={12}
             md={12}
-            lg={6}
+            lg={4}
             className="mb-2"
             controlId="formCategory"
           >
@@ -135,6 +162,33 @@ const ItemForm = (props) => {
               ))}
             </Form.Select>
           </Form.Group>
+
+          {/*Image upload Form.Group*/}
+          <Form.Group
+            as={Col}
+            sm={12}
+            md={12}
+            lg={4}
+            className="mb-2"
+            controlId="formFile"
+          >
+            <Form.Label>Image</Form.Label>
+            {userImage.image ? (
+              <div className="position-relative mb-2">
+                <img className="border w-50 h-25" src={userImage.image} />
+                <Button
+                  onClick={() => setUserImage({ image: null })}
+                  variant="outline-danger"
+                  className="position-absolute bottom-0 end-0"
+                >
+                  Clear
+                </Button>
+              </div>
+            ) : null}
+
+            <Form.Control onChange={onImageChange} name="partImageUpload" type="file" />
+          </Form.Group>
+
         </Row>
         <Row className="d-flex justify-content-center">
           <Col sm={12} md={12} lg={2} className="d-flex justify-content-evenly">

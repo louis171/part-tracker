@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { useState, useEffect } from "react";
 
 import Container from "react-bootstrap/Container";
@@ -11,6 +11,8 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Layout from "./components/Layout/Layout";
 import ItemForm from "./components/Form/ItemForm";
 import PartsTable from "./components/UI/PartsTable/PartsTable";
+import Cards from "./components/UI/Cards/Cards";
+import ImageForm from "./components/Form/ImageForm";
 
 const baseURL = "http://localhost:4000/api";
 
@@ -116,6 +118,7 @@ function App() {
             categories={categories}
           />
         ) : null}
+        <ImageForm />
       </Container>
       <div className="bg-light p-2 m-2 rounded shadow-sm border">
         <Container className="pb-2 border-bottom">
@@ -154,10 +157,15 @@ function App() {
             </Row>
           </Form>
         </Container>
-        <PartsTable
-          filteredParts={filteredParts}
-        />
+        <PartsTable filteredParts={filteredParts} />
       </div>
+      <Container>
+        <Row>
+          <Col>
+            <Cards filteredParts={filteredParts} />
+          </Col>
+        </Row>
+      </Container>
     </Layout>
   );
 }
