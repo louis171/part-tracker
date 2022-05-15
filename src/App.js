@@ -46,7 +46,6 @@ function App() {
     fetch(`${baseURL}/parts`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
         setParts(data);
         setLoading(false);
         setRefresh(false);
@@ -77,9 +76,8 @@ function App() {
   useEffect(() => {
     setFilteredParts(
       parts.filter((part) => {
-        return part.partModel.toLowerCase().includes(searchValue.toLowerCase())
-      }
-      )
+        return part.partModel.toLowerCase().includes(searchValue.toLowerCase());
+      })
     );
   }, [parts, searchValue]);
 
@@ -119,7 +117,6 @@ function App() {
             categories={categories}
           />
         ) : null}
-        
       </Container>
       <div className="bg-light p-2 m-2 rounded shadow-sm border">
         <Container className="pb-2 border-bottom">
@@ -163,7 +160,11 @@ function App() {
       <Container>
         <Row>
           <Col>
-            <Cards filteredParts={filteredParts} />
+            <Cards
+              baseURL={baseURL}
+              setFilteredParts={setFilteredParts}
+              filteredParts={filteredParts}
+            />
           </Col>
         </Row>
       </Container>
