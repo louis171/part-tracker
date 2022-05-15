@@ -12,7 +12,6 @@ import Layout from "./components/Layout/Layout";
 import ItemForm from "./components/Form/ItemForm";
 import PartsTable from "./components/UI/PartsTable/PartsTable";
 import Cards from "./components/UI/Cards/Cards";
-import ImageForm from "./components/Form/ImageForm";
 
 const baseURL = "http://localhost:4000/api";
 
@@ -47,6 +46,7 @@ function App() {
     fetch(`${baseURL}/parts`)
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         setParts(data);
         setLoading(false);
         setRefresh(false);
@@ -76,8 +76,9 @@ function App() {
 
   useEffect(() => {
     setFilteredParts(
-      parts.filter((part) =>
-        part.partModel.toLowerCase().includes(searchValue.toLowerCase())
+      parts.filter((part) => {
+        return part.partModel.toLowerCase().includes(searchValue.toLowerCase())
+      }
       )
     );
   }, [parts, searchValue]);
@@ -118,7 +119,7 @@ function App() {
             categories={categories}
           />
         ) : null}
-        <ImageForm />
+        
       </Container>
       <div className="bg-light p-2 m-2 rounded shadow-sm border">
         <Container className="pb-2 border-bottom">

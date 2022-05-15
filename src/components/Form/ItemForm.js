@@ -16,21 +16,26 @@ const ItemForm = (props) => {
   const [userCategory, setUserCategory] = useState("");
   const [userImage, setUserImage] = useState({ image: null });
 
+  // State for image preview. Stored as URL.createObjectURL
+  const [userImagePreview, setUserImagePreview] = useState({ image: null });
+
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    const formData = new FormData();
+    formData.append("partImageUpload", userImage.image);
+    formData.append("partManufacturer", userManufacturer)
+    formData.append("partModel", userModel)
+    formData.append("partQuantity", userQuantity)
+    formData.append("partCategoryId", userCategory)
+
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        partManufacturer: userManufacturer,
-        partModel: userModel,
-        partQuantity: userQuantity,
-        partCategoryId: userCategory,
-        partImage: userImage,
-      }),
+      body: formData,
     };
     fetch(`${baseURL}${props.urlTarget}`, requestOptions)
       .then((response) => response.json())
+      .then((data) => console.log(data))
       .then(props.refreshDataHandler)
       .then(props.showAddPartForm);
   };
@@ -55,33 +60,24 @@ const ItemForm = (props) => {
   };
 
   const onImageChange = (event) => {
+    event.preventDefault();
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
-      setUserImage({
+      console.log(img);
+      console.log(URL.createObjectURL(img));
+      setUserImagePreview({
         image: URL.createObjectURL(img),
       });
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          partManufacturer: userManufacturer,
-          partModel: userModel,
-          partQuantity: userQuantity,
-          partCategoryId: userCategory,
-          partImage: userImage,
-        }),
-      };
-      fetch(`${baseURL}${props.urlTarget}`, requestOptions)
-        .then((response) => response.json())
-        .then(props.refreshDataHandler)
-        .then(props.showAddPartForm);
+      //const formData = new FormData();
+      //formData.append("partImageUpload", img);
+      setUserImage({ image: img });
     }
   };
 
   return (
     <Container fluid="md">
       <Form
-      encType="multipart/form-data"
+        name="partImageUpload"
         onSubmit={handleSubmit}
         className="bg-light p-4 m-2 rounded shadow-sm border"
       >
@@ -175,7 +171,10 @@ const ItemForm = (props) => {
             <Form.Label>Image</Form.Label>
             {userImage.image ? (
               <div className="position-relative mb-2">
-                <img className="border w-50 h-25" src={userImage.image} />
+                <img
+                  className="border w-50 h-25"
+                  src={userImagePreview.image}
+                />
                 <Button
                   onClick={() => setUserImage({ image: null })}
                   variant="outline-danger"
@@ -186,9 +185,12 @@ const ItemForm = (props) => {
               </div>
             ) : null}
 
-            <Form.Control onChange={onImageChange} name="partImageUpload" type="file" />
+            <Form.Control
+              onChange={onImageChange}
+              name="partImageUpload"
+              type="file"
+            />
           </Form.Group>
-
         </Row>
         <Row className="d-flex justify-content-center">
           <Col sm={12} md={12} lg={2} className="d-flex justify-content-evenly">

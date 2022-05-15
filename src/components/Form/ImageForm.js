@@ -15,6 +15,7 @@ const ImageForm = () => {
       event.preventDefault();
       const formData = new FormData();
       formData.append("file", event.target.files[0]);
+      console.log(formData);
     console.log(userImage);
     const requestOptions = {
       method: "POST",
@@ -36,9 +37,6 @@ const ImageForm = () => {
       event.preventDefault();
       const formData = new FormData();
       formData.append("partImageUpload", img);
-      formData.append('name', 'Test Name');
-      formData.append('desc', 'Test description');
-    console.log(formData);
     const requestOptions = {
       method: "POST",
       body: formData
