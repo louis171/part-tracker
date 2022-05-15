@@ -12,6 +12,7 @@ const baseURL = "http://localhost:4000/api";
 const ItemForm = (props) => {
   const [userManufacturer, setUserManufacturer] = useState("");
   const [userModel, setUserModel] = useState("");
+  const [userReleased, setUserReleased] = useState("");
   const [userQuantity, setUserQuantity] = useState(1);
   const [userCategory, setUserCategory] = useState("");
   const [userImage, setUserImage] = useState({ image: null });
@@ -23,11 +24,13 @@ const ItemForm = (props) => {
     event.preventDefault();
 
     const formData = new FormData();
+    const releaseDateTime = new Date(userReleased).toISOString();
     formData.append("partImageUpload", userImage.image);
-    formData.append("partManufacturer", userManufacturer)
-    formData.append("partModel", userModel)
-    formData.append("partQuantity", userQuantity)
-    formData.append("partCategoryId", userCategory)
+    formData.append("partManufacturer", userManufacturer);
+    formData.append("partModel", userModel);
+    formData.append("partReleased", releaseDateTime);
+    formData.append("partQuantity", userQuantity);
+    formData.append("partCategoryId", userCategory);
 
     const requestOptions = {
       method: "POST",
@@ -51,6 +54,10 @@ const ItemForm = (props) => {
     setUserModel(e.target.value);
   };
 
+  const changeReleasedHandler = (e) => {
+    setUserReleased(e.target.value);
+  };
+
   const changeManufacturerHandler = (e) => {
     setUserManufacturer(e.target.value);
   };
@@ -63,8 +70,6 @@ const ItemForm = (props) => {
     event.preventDefault();
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
-      console.log(img);
-      console.log(URL.createObjectURL(img));
       setUserImagePreview({
         image: URL.createObjectURL(img),
       });
@@ -89,7 +94,7 @@ const ItemForm = (props) => {
             as={Col}
             sm={12}
             md={12}
-            lg={6}
+            lg={4}
             className="mb-2"
             controlId="formManufacturer"
           >
@@ -106,7 +111,7 @@ const ItemForm = (props) => {
             as={Col}
             sm={12}
             md={12}
-            lg={6}
+            lg={4}
             className="mb-2"
             controlId="formModel"
           >
@@ -117,6 +122,22 @@ const ItemForm = (props) => {
               onChange={changeModelHandler}
               type="text"
               placeholder="Model"
+            />
+          </Form.Group>
+          <Form.Group
+            as={Col}
+            sm={12}
+            md={12}
+            lg={4}
+            className="mb-2"
+            controlId="formReleased"
+          >
+            <Form.Label>Released</Form.Label>
+            <Form.Control
+              required
+              value={userReleased}
+              onChange={changeReleasedHandler}
+              type="date"
             />
           </Form.Group>
         </Row>

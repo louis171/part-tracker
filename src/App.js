@@ -10,8 +10,9 @@ import InputGroup from "react-bootstrap/InputGroup";
 
 import Layout from "./components/Layout/Layout";
 import ItemForm from "./components/Form/ItemForm";
-import PartsTable from "./components/UI/PartsTable/PartsTable";
+//import PartsTable from "./components/UI/PartsTable/PartsTable";
 import Cards from "./components/UI/Cards/Cards";
+import Loading from "./components/UI/Loading";
 
 const baseURL = "http://localhost:4000/api";
 
@@ -30,6 +31,8 @@ function App() {
 
   // Categories that are returned from DB
   const [categories, setCategories] = useState();
+  // Released years from DB
+  const [released, setReleased] = useState();
 
   useEffect(() => {
     // READ all category names
@@ -37,6 +40,33 @@ function App() {
       .then((response) => response.json())
       .then((data) => {
         setCategories(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // READ all parts RELEASED dates
+    fetch(`${baseURL}/parts/released`)
+      .then((response) => response.json())
+      .then((data) => {
+        const uniqueYears = data.filter(
+          (value, index, self) =>
+            index ===
+            self.findIndex(
+              (t) =>
+                new Date(t.partReleased).getFullYear() ===
+                new Date(value.partReleased).getFullYear()
+            )
+        );
+        const sortedYears = []
+          .concat(uniqueYears)
+          .sort((a, b) =>
+            new Date(a.partReleased).getFullYear() >
+            new Date(b.partReleased).getFullYear()
+              ? 1
+              : -1
+          );
+        setReleased(sortedYears);
       })
       .catch((err) => {
         console.log(err);
@@ -97,11 +127,7 @@ function App() {
   };
 
   if (loading) {
-    return (
-      <Container className="d-flex justify-content-center">
-        <h1>Loading</h1>
-      </Container>
-    );
+    return <Loading />;
   }
 
   return (
@@ -139,12 +165,12 @@ function App() {
                   />
                 </InputGroup>
               </Col>
-              <Col xs={4} sm={6} md={6} lg={4} xl={2}>
+              <Col xs={4} sm={6} md={6} lg={4} xl={4}>
                 <Form.Select
                   onChange={changeCategoryHandler}
                   aria-label="categorySelect"
                 >
-                  <option key="999">All</option>
+                  <option key="999">All Categories</option>
                   {categories.map((category) => (
                     <option key={category.categoryId}>
                       {category.categoryName}
@@ -152,10 +178,20 @@ function App() {
                   ))}
                 </Form.Select>
               </Col>
+              <Col xs={4} sm={6} md={6} lg={4} xl={4}>
+                <Form.Select aria-label="categorySelect">
+                  <option key="999">All Years</option>
+                  {released.map((release) => (
+                    <option key={release.partId}>
+                      {new Date(release.partReleased).getFullYear()}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Col>
             </Row>
           </Form>
         </Container>
-        <PartsTable filteredParts={filteredParts} />
+        {/* <PartsTable filteredParts={filteredParts} /> */}
       </div>
       <Container>
         <Row>
