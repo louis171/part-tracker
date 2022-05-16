@@ -4,7 +4,6 @@ import Container from "react-bootstrap/Container";
 import { ListGroup, Row, Col, Button } from "react-bootstrap";
 
 const Cards = (props) => {
-
   const { baseURL } = props;
 
   const deleteCardHandler = (part) => {
@@ -14,6 +13,7 @@ const Cards = (props) => {
     props.setFilteredParts(value);
     const requestOptions = {
       method: "DELETE",
+      body: JSON.stringify({ imagePath: part.imagePath }),
     };
     fetch(`${baseURL}/parts/delete?partId=${part.partId}`, requestOptions)
       .then((res) => res.json()) // or res.json()
@@ -23,7 +23,7 @@ const Cards = (props) => {
   const mySqlDateConvert = (date) => {
     const formatDate = new Date(date).toDateString();
     return formatDate;
-  }
+  };
 
   return (
     <Container className="bg-light p-4 mt-4 border rounded shadow">
@@ -87,7 +87,9 @@ const Cards = (props) => {
                     </p>
                   </div>
                   <div className="p-0 m-0 d-flex align-items-center">
-                    <h6 className="p-0 m-2">{mySqlDateConvert(part.partReleased)}</h6>
+                    <h6 className="p-0 m-2">
+                      {mySqlDateConvert(part.partReleased)}
+                    </h6>
                   </div>
                 </ListGroup.Item>
                 <ListGroup.Item className="d-flex p-0 m-0">

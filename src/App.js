@@ -30,7 +30,7 @@ function App() {
   const [searchValue, setSearchValue] = useState("");
   const [categorySearchValue, setCategorySearchValue] = useState("");
   const [yearSearchValue, setYearSearchValue] = useState(999);
-  const [cardSize, setCardSize] = useState(false);
+  const [cardSize, setCardSize] = useState(true);
 
   // Categories that are returned from DB
   const [categories, setCategories] = useState();
