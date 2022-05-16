@@ -13,6 +13,7 @@ import ItemForm from "./components/Form/ItemForm";
 //import PartsTable from "./components/UI/PartsTable/PartsTable";
 import Cards from "./components/UI/Cards/Cards";
 import Loading from "./components/UI/Loading";
+import CardsCompact from "./components/UI/Cards/CardsCompact";
 
 const baseURL = "http://localhost:4000/api";
 
@@ -28,6 +29,8 @@ function App() {
   const [filteredParts, setFilteredParts] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [categorySearchValue, setCategorySearchValue] = useState("");
+  const [yearSearchValue, setYearSearchValue] = useState(999);
+  const [cardSize, setCardSize] = useState(false);
 
   // Categories that are returned from DB
   const [categories, setCategories] = useState();
@@ -49,6 +52,7 @@ function App() {
     fetch(`${baseURL}/parts/released`)
       .then((response) => response.json())
       .then((data) => {
+        // Filters for unique years in returned data
         const uniqueYears = data.filter(
           (value, index, self) =>
             index ===
@@ -58,10 +62,11 @@ function App() {
                 new Date(value.partReleased).getFullYear()
             )
         );
+        // Sorted years in descending order
         const sortedYears = []
           .concat(uniqueYears)
           .sort((a, b) =>
-            new Date(a.partReleased).getFullYear() >
+            new Date(a.partReleased).getFullYear() <
             new Date(b.partReleased).getFullYear()
               ? 1
               : -1
@@ -77,6 +82,7 @@ function App() {
       .then((response) => response.json())
       .then((data) => {
         setParts(data);
+        // Sets loading to false once all data is fetched and sorted
         setLoading(false);
         setRefresh(false);
       })
@@ -87,12 +93,14 @@ function App() {
 
   const refreshDataHandler = () => {
     setRefresh(true);
+    console.log(yearSearchValue);
   };
 
   const showAddPartForm = () => {
     setShowForm((prevShowForm) => !prevShowForm);
   };
 
+  // useEffect for filtering by category
   useEffect(() => {
     if (categorySearchValue === 999) {
       setFilteredParts(parts);
@@ -103,6 +111,7 @@ function App() {
     }
   }, [parts, categorySearchValue]);
 
+  // useEffect for filtering by search string
   useEffect(() => {
     setFilteredParts(
       parts.filter((part) => {
@@ -111,12 +120,27 @@ function App() {
     );
   }, [parts, searchValue]);
 
+  // useEffect for filtering by year
+  useEffect(() => {
+    if (yearSearchValue === 999) {
+      setFilteredParts(parts);
+    } else {
+      setFilteredParts(
+        parts.filter(
+          (part) =>
+            new Date(part.partReleased).getFullYear() === yearSearchValue
+        )
+      );
+    }
+  }, [parts, yearSearchValue]);
+
   const handleSearchChange = (event) => {
+    event.preventDefault();
     setSearchValue(event.target.value);
   };
 
   const changeCategoryHandler = (e) => {
-    if (e.target.value === "All") {
+    if (e.target.value === "All Categories") {
       setCategorySearchValue(999);
     } else {
       const value = categories.filter((item) => {
@@ -124,6 +148,18 @@ function App() {
       });
       setCategorySearchValue(value[0].categoryId);
     }
+  };
+
+  const changeYearHandler = (e) => {
+    if (e.target.value === "All Years") {
+      setYearSearchValue(999);
+    } else {
+      setYearSearchValue(parseInt(e.target.value));
+    }
+  };
+
+  const cardSizeHandler = () => {
+    setCardSize((prevCardSize) => !prevCardSize);
   };
 
   if (loading) {
@@ -145,16 +181,16 @@ function App() {
         ) : null}
       </Container>
       <div className="bg-light p-2 m-2 rounded shadow-sm border">
-        <Container className="pb-2 border-bottom">
+        <Container>
           <Form>
             <Row
               className="d-flex justify-content-evenly"
-              xs={2}
-              sm={6}
+              xs={12}
+              sm={12}
               md={6}
               lg={4}
             >
-              <Col xs={6} sm={6} md={6} lg={4} xl={4}>
+              <Col className="mb-2" xs={12} sm={12} md={6} lg={4} xl={4}>
                 <InputGroup>
                   <Form.Control
                     onChange={handleSearchChange}
@@ -165,7 +201,7 @@ function App() {
                   />
                 </InputGroup>
               </Col>
-              <Col xs={4} sm={6} md={6} lg={4} xl={4}>
+              <Col className="mb-2" xs={6} sm={6} md={6} lg={4} xl={4}>
                 <Form.Select
                   onChange={changeCategoryHandler}
                   aria-label="categorySelect"
@@ -178,8 +214,11 @@ function App() {
                   ))}
                 </Form.Select>
               </Col>
-              <Col xs={4} sm={6} md={6} lg={4} xl={4}>
-                <Form.Select aria-label="categorySelect">
+              <Col className="mb-2" xs={6} sm={6} md={6} lg={2} xl={3}>
+                <Form.Select
+                  onChange={changeYearHandler}
+                  aria-label="yearSelect"
+                >
                   <option key="999">All Years</option>
                   {released.map((release) => (
                     <option key={release.partId}>
@@ -188,19 +227,38 @@ function App() {
                   ))}
                 </Form.Select>
               </Col>
+              <Col
+                className="text-center mb-2"
+                xs={12}
+                sm={12}
+                md={6}
+                lg={2}
+                xl={1}
+              >
+                <Button onClick={cardSizeHandler}>
+                  {cardSize ? "Small" : "Large"}
+                </Button>
+              </Col>
             </Row>
           </Form>
         </Container>
-        {/* <PartsTable filteredParts={filteredParts} /> */}
       </div>
       <Container>
         <Row>
           <Col>
-            <Cards
-              baseURL={baseURL}
-              setFilteredParts={setFilteredParts}
-              filteredParts={filteredParts}
-            />
+            {cardSize ? (
+              <Cards
+                baseURL={baseURL}
+                setFilteredParts={setFilteredParts}
+                filteredParts={filteredParts}
+              />
+            ) : (
+              <CardsCompact
+                baseURL={baseURL}
+                setFilteredParts={setFilteredParts}
+                filteredParts={filteredParts}
+              />
+            )}
           </Col>
         </Row>
       </Container>
