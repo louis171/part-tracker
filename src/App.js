@@ -7,6 +7,7 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Handlers from "./Functions/Handlers";
 
 // Components imports
 import Layout from "./components/Layout/Layout";
@@ -16,7 +17,7 @@ import Loading from "./components/UI/Loading";
 import CardsCompact from "./components/UI/Cards/CardsCompact";
 import Filters from "./components/UI/Filtering/Filters";
 
-const baseURL = "http://localhost:4000/api";
+import { baseURL } from './API/baseUrl';
 
 function App() {
   // Loading initialised as false. useEffect will then set true when loading complete
@@ -97,12 +98,6 @@ function App() {
         console.log(err);
       });
   }, [refresh]);
-
-  // Passed to ItemForm and called when a new part is added
-  const refreshDataHandler = () => {
-    setRefresh(true);
-    console.log(yearSearchValue);
-  };
 
   // Toggles ItemForm
   const showAddPartForm = () => {
@@ -189,7 +184,7 @@ function App() {
             baseURL={baseURL}
             urlTarget="/parts/create"
             showAddPartForm={showAddPartForm}
-            refreshDataHandler={refreshDataHandler}
+            refreshDataHandler={() => Handlers.refreshDataHandler(setRefresh)}
             categories={categories}
           />
         ) : null}
