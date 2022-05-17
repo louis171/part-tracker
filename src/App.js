@@ -1,32 +1,35 @@
+// React imports
 import React from "react";
 import { useState, useEffect } from "react";
 
+// React Bootstrap imports
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import InputGroup from "react-bootstrap/InputGroup";
 
+// Components imports
 import Layout from "./components/Layout/Layout";
 import ItemForm from "./components/Form/ItemForm";
-//import PartsTable from "./components/UI/PartsTable/PartsTable";
 import Cards from "./components/UI/Cards/Cards";
 import Loading from "./components/UI/Loading";
 import CardsCompact from "./components/UI/Cards/CardsCompact";
+import Filters from "./components/UI/Filtering/Filters";
 
 const baseURL = "http://localhost:4000/api";
 
 function App() {
-  // Loading state. Initialised as false. useEffect will then set true when loading complete
+  // Loading initialised as false. useEffect will then set true when loading complete
   const [loading, setLoading] = useState(true);
+  // Used for refreshing data (calls DB)
   const [refresh, setRefresh] = useState(false);
-  // State for add new part form
+  // State for displaying 'add new part form'
   const [showForm, setShowForm] = useState(false);
-  // State for parts that are returned from DB
+  // State for parts that are returned from DB and filtered
   const [parts, setParts] = useState([]);
-  // State for filters
   const [filteredParts, setFilteredParts] = useState([]);
+
+  // States for filters/options
   const [searchValue, setSearchValue] = useState("");
   const [categorySearchValue, setCategorySearchValue] = useState("");
   const [yearSearchValue, setYearSearchValue] = useState(999);
@@ -83,7 +86,11 @@ function App() {
       .then((data) => {
         setParts(data);
         // Sets loading to false once all data is fetched and sorted
-        setLoading(false);
+        if (loading) {
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000);
+        }
         setRefresh(false);
       })
       .catch((err) => {
@@ -91,11 +98,13 @@ function App() {
       });
   }, [refresh]);
 
+  // Passed to ItemForm and called when a new part is added
   const refreshDataHandler = () => {
     setRefresh(true);
     console.log(yearSearchValue);
   };
 
+  // Toggles ItemForm
   const showAddPartForm = () => {
     setShowForm((prevShowForm) => !prevShowForm);
   };
@@ -134,11 +143,13 @@ function App() {
     }
   }, [parts, yearSearchValue]);
 
+  // Sets state for string search
   const handleSearchChange = (event) => {
     event.preventDefault();
     setSearchValue(event.target.value);
   };
 
+  // Filters for categoryId and sets state
   const changeCategoryHandler = (e) => {
     if (e.target.value === "All Categories") {
       setCategorySearchValue(999);
@@ -150,6 +161,7 @@ function App() {
     }
   };
 
+  // Sets state for year filter
   const changeYearHandler = (e) => {
     if (e.target.value === "All Years") {
       setYearSearchValue(999);
@@ -158,10 +170,12 @@ function App() {
     }
   };
 
+  // Toggles card between full and compact
   const cardSizeHandler = () => {
     setCardSize((prevCardSize) => !prevCardSize);
   };
 
+  // Returns loading page when data is loading
   if (loading) {
     return <Loading />;
   }
@@ -180,69 +194,16 @@ function App() {
           />
         ) : null}
       </Container>
-      <div className="bg-light p-2 m-2 rounded shadow-sm border">
-        <Container>
-          <Form>
-            <Row
-              className="d-flex justify-content-evenly"
-              xs={12}
-              sm={12}
-              md={6}
-              lg={4}
-            >
-              <Col className="mb-2" xs={12} sm={12} md={6} lg={4} xl={4}>
-                <InputGroup>
-                  <Form.Control
-                    onChange={handleSearchChange}
-                    value={searchValue}
-                    placeholder="Search"
-                    aria-label="Username"
-                    aria-describedby="basic-addon1"
-                  />
-                </InputGroup>
-              </Col>
-              <Col className="mb-2" xs={6} sm={6} md={6} lg={4} xl={4}>
-                <Form.Select
-                  onChange={changeCategoryHandler}
-                  aria-label="categorySelect"
-                >
-                  <option key="999">All Categories</option>
-                  {categories.map((category) => (
-                    <option key={category.categoryId}>
-                      {category.categoryName}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Col>
-              <Col className="mb-2" xs={6} sm={6} md={6} lg={2} xl={3}>
-                <Form.Select
-                  onChange={changeYearHandler}
-                  aria-label="yearSelect"
-                >
-                  <option key="999">All Years</option>
-                  {released.map((release) => (
-                    <option key={release.partId}>
-                      {new Date(release.partReleased).getFullYear()}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Col>
-              <Col
-                className="text-center mb-2"
-                xs={12}
-                sm={12}
-                md={6}
-                lg={2}
-                xl={1}
-              >
-                <Button onClick={cardSizeHandler}>
-                  {cardSize ? "Small" : "Large"}
-                </Button>
-              </Col>
-            </Row>
-          </Form>
-        </Container>
-      </div>
+      <Filters
+        handleSearchChange={handleSearchChange}
+        searchValue={searchValue}
+        changeCategoryHandler={changeCategoryHandler}
+        categories={categories}
+        changeYearHandler={changeYearHandler}
+        released={released}
+        cardSizeHandler={cardSizeHandler}
+        cardSize={cardSize}
+      />
       <Container>
         <Row>
           <Col>

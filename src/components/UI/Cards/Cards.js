@@ -34,7 +34,7 @@ const Cards = (props) => {
             sm
             className="col-lg-4 col-md-6 col-sm-12 mb-4"
           >
-            <Card style={{ cursor: "pointer" }} className="h-100">
+            <Card className="h-100">
               <ListGroup variant="flush">
                 <ListGroup.Item style={{ height: "300px" }} className="w-100">
                   <img
