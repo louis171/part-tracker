@@ -48,6 +48,7 @@ useEffect(() => {
       .then((data) => {
         setParts(data);
         // Sets loading to false once all data is fetched and sorted
+        // ** ADDED 1 SECOND DELAY TO LOADING **
         if (loading) {
           setTimeout(() => {
             setLoading(false);

@@ -4,20 +4,19 @@ import { useState, useEffect } from "react";
 
 // React Bootstrap imports
 import Container from "react-bootstrap/Container";
-import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Handlers from "./Functions/Handlers";
 
 // Components imports
 import Layout from "./components/Layout/Layout";
-import ItemForm from "./components/Form/ItemForm";
 import Cards from "./components/UI/Cards/Cards";
 import Loading from "./components/UI/Loading";
 import CardsCompact from "./components/UI/Cards/CardsCompact";
 import Filters from "./components/UI/Filtering/Filters";
 
-import { baseURL } from './API/baseUrl';
+import { baseURL } from "./API/baseUrl";
+import AddModal from "./components/Modal/AddModal";
 
 function App() {
   // Loading initialised as false. useEffect will then set true when loading complete
@@ -178,16 +177,12 @@ function App() {
   return (
     <Layout>
       <Container className="p-2 m-2">
-        <Button onClick={showAddPartForm}>{showForm ? "Cancel" : "Add"}</Button>
-        {showForm ? (
-          <ItemForm
-            baseURL={baseURL}
-            urlTarget="/parts/create"
-            showAddPartForm={showAddPartForm}
-            refreshDataHandler={() => Handlers.refreshDataHandler(setRefresh)}
-            categories={categories}
-          />
-        ) : null}
+        <AddModal
+          baseURL={baseURL}
+          urlTarget="/parts/create"
+          refreshDataHandler={() => Handlers.refreshDataHandler(setRefresh)}
+          categories={categories}
+        />
       </Container>
       <Filters
         handleSearchChange={handleSearchChange}
