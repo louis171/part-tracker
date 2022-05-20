@@ -17,14 +17,13 @@ import Filters from "./components/UI/Filtering/Filters";
 
 import { baseURL } from "./API/baseUrl";
 import AddModal from "./components/Modal/AddModal";
+import EditModal from "./components/Modal/EditModal";
 
 function App() {
   // Loading initialised as false. useEffect will then set true when loading complete
   const [loading, setLoading] = useState(true);
   // Used for refreshing data (calls DB)
   const [refresh, setRefresh] = useState(false);
-  // State for displaying 'add new part form'
-  const [showForm, setShowForm] = useState(false);
   // State for parts that are returned from DB and filtered
   const [parts, setParts] = useState([]);
   const [filteredParts, setFilteredParts] = useState([]);
@@ -97,11 +96,6 @@ function App() {
         console.log(err);
       });
   }, [refresh]);
-
-  // Toggles ItemForm
-  const showAddPartForm = () => {
-    setShowForm((prevShowForm) => !prevShowForm);
-  };
 
   // useEffect for filtering by category
   useEffect(() => {
@@ -180,6 +174,12 @@ function App() {
         <AddModal
           baseURL={baseURL}
           urlTarget="/parts/create"
+          refreshDataHandler={() => Handlers.refreshDataHandler(setRefresh)}
+          categories={categories}
+        />
+        <EditModal
+          baseURL={baseURL}
+          urlTarget="/parts/update"
           refreshDataHandler={() => Handlers.refreshDataHandler(setRefresh)}
           categories={categories}
         />

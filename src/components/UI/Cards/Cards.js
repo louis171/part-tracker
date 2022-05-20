@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import { ListGroup, Row, Col, Button } from "react-bootstrap";
+import { PartContext } from "../../../Context/partContext";
+import { ModalContext } from "../../../Context/modalContext";
 
 const Cards = (props) => {
   const { baseURL } = props;
+  const { setSelectedPart } = useContext(PartContext);
+  const { setEditModal } = useContext(ModalContext);
 
   const deleteCardHandler = (part) => {
     const value = props.filteredParts.filter((filteredPart) => {
@@ -93,6 +97,28 @@ const Cards = (props) => {
                   </div>
                 </ListGroup.Item>
                 <ListGroup.Item className="d-flex p-0 m-0">
+                  <div className="p-2 m-0 w-100 d-flex align-items-center justify-content-evenly">
+                    <Button
+                      onClick={() => {
+                        setEditModal(true);
+                        setSelectedPart({
+                          partid: part.partId,
+                          partManufacturer: part.partManufacturer,
+                          partModel: part.partModel,
+                          partCreated: part.partCreated,
+                          partUpdated: part.partUpdated,
+                          partQuantity: part.partQuantity,
+                          partCategoryId: 0,
+                          partReleased: part.partReleased,
+                          categoryName: part.category.categoryName,
+                          imagePath: part.image[0].imagePath,
+                        });
+                      }}
+                      variant="outline-primary"
+                    >
+                      Edit
+                    </Button>
+                  </div>
                   <div className="p-2 m-0 w-100 d-flex align-items-center justify-content-evenly">
                     <Button
                       onClick={() => deleteCardHandler(part)}
