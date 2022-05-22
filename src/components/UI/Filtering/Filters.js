@@ -8,8 +8,7 @@ import Col from "react-bootstrap/Col";
 import InputGroup from "react-bootstrap/InputGroup";
 
 const Filters = (props) => {
-
-    // Destructuring props
+  // Destructuring props
   const {
     handleSearchChange,
     searchValue,
@@ -55,7 +54,7 @@ const Filters = (props) => {
                 ))}
               </Form.Select>
             </Col>
-            <Col className="mb-2" xs={6} sm={6} md={6} lg={2} xl={3}>
+            <Col className="mb-2" xs={6} sm={6} md={6} lg={2} xl={2}>
               <Form.Select onChange={changeYearHandler} aria-label="yearSelect">
                 <option key="999">All Years</option>
                 {released.map((release) => (
@@ -71,11 +70,13 @@ const Filters = (props) => {
               sm={12}
               md={6}
               lg={2}
-              xl={1}
+              xl={2}
             >
-              <Button aria-label="cardSizeToggle" onClick={cardSizeHandler}>
-                {cardSize ? "Small" : "Large"}
-              </Button>
+              <Form.Select aria-label="cardToggleSelect" onChange={props.viewChangeHandler}>
+                <option value={0} key={0}>Large card</option>
+                <option value={1} key={1}>Small card</option>
+                <option value={2} key={2}>Table</option>
+              </Form.Select>
             </Col>
           </Row>
         </Form>

@@ -34,7 +34,7 @@ It uses a MySQL DB and Node.js [backend](https://github.com/louis171/part-tracke
   - Text search
   - Category
   - Release year
-* Change card layout (large or small)
+* Change parts view (large, small, table)
 
 ## Todo
 
@@ -42,4 +42,6 @@ It uses a MySQL DB and Node.js [backend](https://github.com/louis171/part-tracke
 | --- | :---: |
 | Show image preview on edit  | :ballot_box_with_check:  |
 | Show category on edit  | :ballot_box_with_check:  |
-| Add third card layout  | In progress  |
+| Add third card layout  | :ballot_box_with_check:  |
+| Add alerts for success/failed actions  | In progress  |
+| Add 'link' field  | In progress  |

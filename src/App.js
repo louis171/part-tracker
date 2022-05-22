@@ -19,6 +19,7 @@ import { baseURL } from "./API/baseUrl";
 import AddModal from "./components/Modal/AddModal";
 import EditModal from "./components/Modal/EditModal";
 import Success from "./components/Alerts/Success";
+import CardRow from "./components/UI/Cards/CardRow";
 
 function App() {
   // Loading initialised as false. useEffect will then set true when loading complete
@@ -33,7 +34,8 @@ function App() {
   const [searchValue, setSearchValue] = useState("");
   const [categorySearchValue, setCategorySearchValue] = useState("");
   const [yearSearchValue, setYearSearchValue] = useState(999);
-  const [cardSize, setCardSize] = useState(true);
+ // State for holding view type (0, 1, 2)
+  const [viewType, setViewType] = useState(0);
 
   // Categories that are returned from DB
   const [categories, setCategories] = useState();
@@ -159,9 +161,9 @@ function App() {
     }
   };
 
-  // Toggles card between full and compact
-  const cardSizeHandler = () => {
-    setCardSize((prevCardSize) => !prevCardSize);
+  // Set state from select in Filters.js
+  const viewChangeHandler = (e) => {
+    setViewType(e.target.value);
   };
 
   // Returns loading page when data is loading
@@ -193,27 +195,34 @@ function App() {
         categories={categories}
         changeYearHandler={changeYearHandler}
         released={released}
-        cardSizeHandler={cardSizeHandler}
-        cardSize={cardSize}
+        viewChangeHandler={viewChangeHandler}
       />
       <Container>
+
         <Row>
           <Col>
-            {cardSize ? (
+            {viewType == 0 ? (
               <Cards
                 baseURL={baseURL}
                 setFilteredParts={setFilteredParts}
                 filteredParts={filteredParts}
               />
-            ) : (
+            ) : viewType == 1 ? (
               <CardsCompact
                 baseURL={baseURL}
                 setFilteredParts={setFilteredParts}
                 filteredParts={filteredParts}
               />
-            )}
+            ) : viewType == 2 ? (
+              <CardRow
+                baseURL={baseURL}
+                setFilteredParts={setFilteredParts}
+                filteredParts={filteredParts}
+              />
+            ) : null}
           </Col>
         </Row>
+
       </Container>
     </Layout>
   );
