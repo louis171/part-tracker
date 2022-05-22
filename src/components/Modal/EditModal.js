@@ -48,6 +48,7 @@ const EditModal = (props) => {
       )
         .then((response) => response.json())
         .then((data) => console.log(data))
+        .then(clearImageFormData);
     }
 
     const requestOptions = {
@@ -62,6 +63,11 @@ const EditModal = (props) => {
       .then((data) => console.log(data))
       .then(setEditModal(false))
       .then(props.refreshDataHandler);
+  };
+
+  const clearImageFormData = () => {
+    setUserImage({ image: null });
+    setUserImagePreview({ image: null });
   };
 
   const changeCategoryHandler = (e) => {

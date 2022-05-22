@@ -18,6 +18,7 @@ import Filters from "./components/UI/Filtering/Filters";
 import { baseURL } from "./API/baseUrl";
 import AddModal from "./components/Modal/AddModal";
 import EditModal from "./components/Modal/EditModal";
+import Success from "./components/Alerts/Success";
 
 function App() {
   // Loading initialised as false. useEffect will then set true when loading complete
@@ -183,6 +184,7 @@ function App() {
           refreshDataHandler={() => Handlers.refreshDataHandler(setRefresh)}
           categories={categories}
         />
+        <Success />
       </Container>
       <Filters
         handleSearchChange={handleSearchChange}

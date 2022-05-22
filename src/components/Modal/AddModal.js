@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { AlertContext } from "../../Context/alertContext";
 
 import { baseURL } from "../../API/baseUrl";
 
 const EditModal = (props) => {
+  const { alertShowHandler } = useContext(AlertContext);
+
   const [modalShow, setModalShow] = useState(false);
   const [userManufacturer, setUserManufacturer] = useState("");
   const [userModel, setUserModel] = useState("");
@@ -40,6 +43,7 @@ const EditModal = (props) => {
       .then((data) => console.log(data))
       .then(setModalShow(false))
       .then(clearFormDataHandler)
+      .then(alertShowHandler)
       .then(props.refreshDataHandler);
   };
 
