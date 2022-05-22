@@ -22,6 +22,13 @@ It uses a MySQL DB and Node.js [backend](https://github.com/louis171/part-tracke
   - Quantity
   - Category
   - Image
+* Update parts
+  - Manufacturer
+  - Model
+  - Released
+  - Quantity
+  - Category
+  - Image
 * Delete parts
 * Filter by:
   - Text search
@@ -31,6 +38,8 @@ It uses a MySQL DB and Node.js [backend](https://github.com/louis171/part-tracke
 
 ## Todo
 
-* Show image preview on edit
-* Show category on edit
-* Add third card layout (more table/row like)
+| Feature  | Status |
+| --- | :---: |
+| Show image preview on edit  | :ballot_box_with_check:  |
+| Show category on edit  | :ballot_box_with_check:  |
+| Add third card layout  | In progress  |
