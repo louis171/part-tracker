@@ -31,7 +31,6 @@ const EditModal = (props) => {
     formData.append("partReleased", releaseDateTime);
     formData.append("partQuantity", userQuantity);
     formData.append("partCategoryId", userCategory);
-
     const requestOptions = {
       method: "POST",
       body: formData,
@@ -218,7 +217,10 @@ const EditModal = (props) => {
                     src={userImagePreview.image}
                   />
                   <Button
-                    onClick={() => setUserImage({ image: null })}
+                    onClick={() => {
+                      setUserImage({ image: null });
+                      setUserImagePreview({ image: null });
+                    }}
                     variant="outline-danger"
                     className="position-absolute bottom-0 end-0"
                   >

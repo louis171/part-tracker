@@ -41,7 +41,7 @@ const Cards = (props) => {
             <Card className="h-100">
               <ListGroup variant="flush">
                 <ListGroup.Item style={{ height: "300px" }} className="w-100">
-                  <img
+                  <img className="d-block mx-auto"
                     style={{ width: "280px" }}
                     src={part.image[0].imagePath}
                   ></img>
@@ -102,16 +102,17 @@ const Cards = (props) => {
                       onClick={() => {
                         setEditModal(true);
                         setSelectedPart({
-                          partid: part.partId,
+                          partId: part.partId,
                           partManufacturer: part.partManufacturer,
                           partModel: part.partModel,
                           partCreated: part.partCreated,
                           partUpdated: part.partUpdated,
                           partQuantity: part.partQuantity,
-                          partCategoryId: 0,
+                          partCategoryId: part.category.categoryId,
                           partReleased: part.partReleased,
-                          categoryName: part.category.categoryName,
+                          partCategoryName: part.category.categoryName,
                           imagePath: part.image[0].imagePath,
+                          imageId: part.image[0].imageId
                         });
                       }}
                       variant="outline-primary"

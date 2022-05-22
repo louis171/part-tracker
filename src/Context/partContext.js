@@ -12,6 +12,7 @@ export const PartContext = createContext({
   partReleased: "",
   categoryName: "",
   imagePath: "",
+  imageId: ""
 });
 
 const PartContextProvider = (props) => {
@@ -27,6 +28,7 @@ const PartContextProvider = (props) => {
     partReleased: "",
     categoryName: "",
     imagePath: "",
+    imageId: ""
   });
 
 
