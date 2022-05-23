@@ -40,7 +40,7 @@ const CardRow = (props) => {
               <th>Quantity</th>
               <th>Category</th>
               <th>Released</th>
-              <th>Options</th>
+              <th className="text-center">Options</th>
             </tr>
           </thead>
           <tbody>
@@ -51,7 +51,7 @@ const CardRow = (props) => {
                 <td>{part.partQuantity}</td>
                 <td>{part.category.categoryName}</td>
                 <td>{mySqlDateConvert(part.partReleased)}</td>
-                <td>
+                <td className="d-flex justify-content-around">
                   <Button
                     onClick={() => {
                       setEditModal(true);

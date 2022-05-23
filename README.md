@@ -44,4 +44,4 @@ It uses a MySQL DB and Node.js [backend](https://github.com/louis171/part-tracke
 | Show category on edit  | :ballot_box_with_check:  |
 | Add third card layout  | :ballot_box_with_check:  |
 | Add alerts for success/failed actions  | In progress  |
-| Add 'link' field  | In progress  |
+| Add 'link' field  | :ballot_box_with_check:  |

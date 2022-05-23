@@ -1,32 +1,35 @@
-import React from "react";
+import React, { useContext } from "react";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import { Row, Col, ListGroup, Button } from "react-bootstrap";
+import { PartContext } from "../../../Context/partContext";
+import { ModalContext } from "../../../Context/modalContext";
 
 const CardsCompact = (props) => {
+  const { baseURL } = props;
+  const { setSelectedPart } = useContext(PartContext);
+  const { setEditModal } = useContext(ModalContext);
 
-    const { baseURL } = props;
+  const deleteCardHandler = (part) => {
+    const value = props.filteredParts.filter((filteredPart) => {
+      return filteredPart.partId !== part.partId;
+    });
+    props.setFilteredParts(value);
+    const requestOptions = {
+      method: "DELETE",
+    };
+    fetch(`${baseURL}/parts/delete?partId=${part.partId}`, requestOptions)
+      .then((res) => res.json()) // or res.json()
+      .then((res) => console.log(res));
+  };
 
-    const deleteCardHandler = (part) => {
-        const value = props.filteredParts.filter((filteredPart) => {
-          return filteredPart.partId !== part.partId;
-        });
-        props.setFilteredParts(value);
-        const requestOptions = {
-          method: "DELETE",
-        };
-        fetch(`${baseURL}/parts/delete?partId=${part.partId}`, requestOptions)
-          .then((res) => res.json()) // or res.json()
-          .then((res) => console.log(res));
-      };
-
-    const mySqlDateConvert = (date) => {
-        const formatDate = new Date(date).toDateString();
-        return formatDate;
-      }
+  const mySqlDateConvert = (date) => {
+    const formatDate = new Date(date).toDateString();
+    return formatDate;
+  };
 
   return (
-<Container className="bg-light p-4 mt-4 border rounded shadow">
+    <Container className="bg-light p-4 mt-4 border rounded shadow">
       <Row>
         {props.filteredParts.map((part) => (
           <Col
@@ -37,9 +40,9 @@ const CardsCompact = (props) => {
             <Card className="h-100">
               <ListGroup variant="flush">
                 <ListGroup.Item variant="primary" className="d-flex p-0 m-0">
-                    <div className="p-0 m-0 w-25 d-flex align-items-center border-end border">
+                  <div className="p-0 m-0 w-25 d-flex align-items-center border-end border">
                     <p style={{ fontSize: ".6rem" }} className="p-0 m-2">
-                    Manufacturer
+                      Manufacturer
                     </p>
                   </div>
                   <div className="p-0 m-0 d-flex align-items-center">
@@ -63,7 +66,9 @@ const CardsCompact = (props) => {
                     </p>
                   </div>
                   <div className="p-0 m-0 d-flex align-items-center">
-                    <p style={{ fontSize: ".8rem" }} className="p-0 m-0 ms-2">{part.partQuantity}</p>
+                    <p style={{ fontSize: ".8rem" }} className="p-0 m-0 ms-2">
+                      {part.partQuantity}
+                    </p>
                   </div>
                 </ListGroup.Item>
                 <ListGroup.Item className="d-flex p-0 m-0">
@@ -73,7 +78,9 @@ const CardsCompact = (props) => {
                     </p>
                   </div>
                   <div className="p-0 m-0 d-flex align-items-center">
-                    <p style={{ fontSize: ".8rem" }} className="p-0 m-0 ms-2">{part.category.categoryName}</p>
+                    <p style={{ fontSize: ".8rem" }} className="p-0 m-0 ms-2">
+                      {part.category.categoryName}
+                    </p>
                   </div>
                 </ListGroup.Item>
                 <ListGroup.Item className="d-flex p-0 m-0">
@@ -83,10 +90,44 @@ const CardsCompact = (props) => {
                     </p>
                   </div>
                   <div className="p-0 m-0 d-flex align-items-center">
-                    <p style={{ fontSize: ".8rem" }} className="p-0 m-0 ms-2">{mySqlDateConvert(part.partReleased)}</p>
+                    <p style={{ fontSize: ".8rem" }} className="p-0 m-0 ms-2">
+                      {mySqlDateConvert(part.partReleased)}
+                    </p>
                   </div>
                 </ListGroup.Item>
                 <ListGroup.Item className="d-flex p-0 m-0">
+                  <div className="p-2 m-0 w-100 d-flex align-items-center justify-content-evenly">
+                    <Button
+                      href={part.partLink}
+                      target="_blank"
+                      variant="outline-info"
+                    >
+                      Link
+                    </Button>
+                  </div>
+                  <div className="p-2 m-0 w-100 d-flex align-items-center justify-content-evenly">
+                    <Button
+                      onClick={() => {
+                        setEditModal(true);
+                        setSelectedPart({
+                          partId: part.partId,
+                          partManufacturer: part.partManufacturer,
+                          partModel: part.partModel,
+                          partCreated: part.partCreated,
+                          partUpdated: part.partUpdated,
+                          partQuantity: part.partQuantity,
+                          partCategoryId: part.category.categoryId,
+                          partReleased: part.partReleased,
+                          partCategoryName: part.category.categoryName,
+                          imagePath: part.image[0].imagePath,
+                          imageId: part.image[0].imageId,
+                        });
+                      }}
+                      variant="outline-primary"
+                    >
+                      Edit
+                    </Button>
+                  </div>
                   <div className="p-1 m-0 w-100 d-flex align-items-center justify-content-evenly">
                     <Button
                       onClick={() => deleteCardHandler(part)}

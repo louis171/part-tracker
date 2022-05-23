@@ -20,7 +20,7 @@ const Cards = (props) => {
       body: JSON.stringify({ imagePath: part.imagePath }),
     };
     fetch(`${baseURL}/parts/delete?partId=${part.partId}`, requestOptions)
-      .then((res) => res.json()) // or res.json()
+      .then((res) => res.json())
       .then((res) => console.log(res));
   };
 
@@ -97,6 +97,15 @@ const Cards = (props) => {
                   </div>
                 </ListGroup.Item>
                 <ListGroup.Item className="d-flex p-0 m-0">
+                <div className="p-2 m-0 w-100 d-flex align-items-center justify-content-evenly">
+                    <Button
+                      href={part.partLink}
+                      target="_blank"
+                      variant="outline-info"
+                    >
+                      Link
+                    </Button>
+                  </div>
                   <div className="p-2 m-0 w-100 d-flex align-items-center justify-content-evenly">
                     <Button
                       onClick={() => {
